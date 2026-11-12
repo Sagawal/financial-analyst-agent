@@ -1,12 +1,36 @@
+# Environment variables and secrets
 .env
+.streamlit/secrets.toml
+
+# Python environments
 .venv/
 venv/
+
+# Root-level manual test files
+/test_*.py
+
+# Python cache
 __pycache__/
-.pytest_cache/
 *.py[cod]
+.pytest_cache/
+
+# Data
 data/raw/*
 !data/raw/.gitkeep
+
 data/processed/*
 !data/processed/.gitkeep
+
+# Vector database
 chroma_db/
-.streamlit/secrets.toml
+
+# Conversation memory
+conversation_memory.sqlite*
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

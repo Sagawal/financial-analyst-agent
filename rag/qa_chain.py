@@ -7,13 +7,32 @@ from rag.embeddings import BGEEmbeddings
 from rag.vector_store import FinancialVectorStore
 from rag.retriever import FinancialRetriever
 
+import os
+
+from rag.supabase_vector_store import SupabaseFinancialVectorStore
+
 
 # 1. Initialize components
 embedding_model = BGEEmbeddings()
 
-vector_store = FinancialVectorStore(
-    embedding_model=embedding_model
-)
+VECTOR_STORE_TYPE = os.getenv("VECTOR_STORE", "chroma").lower()
+
+if VECTOR_STORE_TYPE == "chroma":
+
+    vector_store = FinancialVectorStore(
+        embedding_model=embedding_model
+    )
+
+elif VECTOR_STORE_TYPE == "supabase":
+
+    vector_store = SupabaseFinancialVectorStore(
+        embedding_model=embedding_model
+    )
+
+else:
+    raise ValueError(
+        f"Unsupported vector store: {VECTOR_STORE_TYPE}"
+    )
 
 retriever = FinancialRetriever(vector_store)
 

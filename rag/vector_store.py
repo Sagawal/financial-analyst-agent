@@ -6,11 +6,7 @@ from langchain_chroma import Chroma
 from langchain_core.documents import Document
 
 from rag.embeddings import BGEEmbeddings
-from config.settings import PROJECT_ROOT
-
-
-# Persistent database directory
-CHROMA_DIR = PROJECT_ROOT / "chroma_db"
+from config.settings import CHROMA_DIR
 
 # Collection name
 COLLECTION_NAME = "financial_documents"
