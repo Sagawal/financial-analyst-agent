@@ -27,6 +27,8 @@ try:
         "EMBEDDING_MODEL",
         "SUPABASE_DB_URL",
         "VECTOR_STORE",
+        "SUPABASE_URL",
+        "SUPABASE_SERVICE_ROLE_KEY",
     ]
 
     for key in secret_keys:

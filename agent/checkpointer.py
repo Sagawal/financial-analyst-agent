@@ -1,20 +1,27 @@
-import sqlite3
+from psycopg.rows import dict_row
+from psycopg_pool import ConnectionPool
+from langgraph.checkpoint.postgres import PostgresSaver
 
-from langgraph.checkpoint.sqlite import SqliteSaver
-
-from config.settings import CONVERSATION_DB_PATH
-
-DB_PATH = CONVERSATION_DB_PATH
+from config.settings import LANGGRAPH_DATABASE_URL
 
 
-# Persistent SQLite connection
-connection = sqlite3.connect(
-    str(DB_PATH),
-    check_same_thread=False
+if not LANGGRAPH_DATABASE_URL:
+    raise ValueError("LANGGRAPH_DATABASE_URL is missing.")
+
+
+# Create PostgreSQL connection pool
+connection_pool = ConnectionPool(
+    conninfo=LANGGRAPH_DATABASE_URL,
+    min_size=1,
+    max_size=5,
+    kwargs={
+        "autocommit": True,
+        "row_factory": dict_row
+    }
 )
 
-# Create checkpointer
-checkpointer = SqliteSaver(connection)
+# Create PostgreSQL checkpointer
+checkpointer = PostgresSaver(connection_pool)
 
-# Initialize database tables
+# Initialize checkpoint tables
 checkpointer.setup()

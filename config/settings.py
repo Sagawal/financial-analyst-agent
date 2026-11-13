@@ -15,6 +15,19 @@ TAVILY_API_KEY = os.getenv("TAVILY_API_KEY", "").strip()
 
 SEC_USER_AGENT = os.getenv("SEC_USER_AGENT", "").strip()
 
+SUPABASE_URL = os.getenv("SUPABASE_URL", "").strip()
+SUPABASE_SERVICE_ROLE_KEY = os.getenv(
+    "SUPABASE_SERVICE_ROLE_KEY", ""
+).strip()
+
+SUPABASE_STORAGE_BUCKET = "financial-reports"
+
+LANGGRAPH_DATABASE_URL = os.getenv(
+    "LANGGRAPH_DATABASE_URL", ""
+).strip()
+
+SEC_STORAGE_BUCKET = "sec-filings"
+
 
 # ---------------- SEC Configuration ----------------
 
