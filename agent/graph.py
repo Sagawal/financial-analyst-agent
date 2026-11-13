@@ -165,15 +165,36 @@ def generate_answer_node(state: AgentState):
             "answer": "I couldn't find relevant information in the available financial documents."
         }
 
-    context = "\n\n".join(
-        f"""
-        Source {i}
-        Filename: {doc.metadata.get('filename', 'Unknown')}
-        Page: {doc.metadata.get('page', 'Unknown')}
-        Content: {doc.page_content}
-        """
-        for i, doc in enumerate(documents, start=1)
-    )
+    context_parts = []
+
+    for i, doc in enumerate(documents, start=1):
+        metadata = doc.metadata
+
+        source_info = [
+            f"Source ID: {i}",
+            f"Filename: {metadata.get('filename', 'Unknown')}",
+            f"Document type: {metadata.get('document_type', 'Unknown')}",
+        ]
+
+        if metadata.get("document_type") == "sec_filing":
+            source_info.extend([
+                f"Filing type: {metadata.get('filing_type', 'Unknown')}",
+                f"Filing date: {metadata.get('filing_date', 'Unknown')}",
+                f"Report date: {metadata.get('report_date', 'Unknown')}",
+                f"Section: {metadata.get('section', 'Unknown')}",
+            ])
+
+        else:
+            source_info.append(
+                f"Page: {metadata.get('page', 'Unknown')}"
+            )
+
+        context_parts.append(
+            "\n".join(source_info) +
+            f"\nContent: {doc.page_content}"
+        )
+
+    context = "\n\n".join(context_parts)
 
     verification_feedback = state.get("verification_feedback")
 
@@ -186,12 +207,15 @@ def generate_answer_node(state: AgentState):
             Answer the user's question using ONLY the retrieved context.
 
             Rules:
+            - Answer using ONLY the retrieved context.
             - Never invent financial values.
             - Mention fiscal years and units.
-            - Cite filenames and page numbers.
             - Distinguish facts from interpretation.
             - If information is missing, say so.
-            - Do not make unsupported claims.
+            - Cite factual claims using [Source 1], [Source 2], etc.
+            - Use only source IDs provided in the retrieved context.
+            - Place citations next to the claims they support.
+            - Never invent page numbers, filing dates, or sections.
 
             Additional verification feedback:
             {feedback}

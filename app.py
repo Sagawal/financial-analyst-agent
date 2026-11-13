@@ -78,6 +78,30 @@ ticker = companies[selected_company]
 st.sidebar.info(f"Selected company: {ticker}")
 
 
+
+def display_sources(sources):
+
+    with st.expander("View Retrieved Sources"):
+
+        for i, doc in enumerate(sources, start=1):
+
+            metadata = doc.metadata
+
+            st.markdown(f"**Source {i}**")
+            st.write(f"Ticker: {metadata.get('ticker', 'N/A')}")
+            st.write(f"File: {metadata.get('filename', 'N/A')}")
+
+            if metadata.get("document_type") == "sec_filing":
+                st.write(f"Filing type: {metadata.get('filing_type', 'N/A')}")
+                st.write(f"Filing date: {metadata.get('filing_date', 'N/A')}")
+                st.write(f"Report date: {metadata.get('report_date', 'N/A')}")
+                st.write(f"Section: {metadata.get('section', 'N/A')}")
+            else:
+                st.write(f"Page: {metadata.get('page', 'N/A')}")
+
+            st.text(doc.page_content[:1000])
+            st.divider()
+
 # ---------------- PDF Upload ----------------
 
 st.sidebar.subheader("Upload Financial Reports")
@@ -160,17 +184,7 @@ for message in st.session_state.messages:
         st.markdown(message["content"])
 
         if message["role"] == "assistant" and message.get("sources"):
-
-            with st.expander("View Retrieved Sources"):
-
-                for i, doc in enumerate(message["sources"], start=1):
-
-                    st.markdown(f"**Source {i}**")
-                    st.write(f"Ticker: {doc.metadata.get('ticker', 'N/A')}")
-                    st.write(f"File: {doc.metadata.get('filename', 'N/A')}")
-                    st.write(f"Page: {doc.metadata.get('page', 'N/A')}")
-                    st.text(doc.page_content[:1000])
-                    st.divider()
+            display_sources(message["sources"])
 
 
 # ---------------- Chat Input ----------------
@@ -212,17 +226,7 @@ if question:
                 st.markdown(answer)
 
                 if sources:
-
-                    with st.expander("View Retrieved Sources"):
-
-                        for i, doc in enumerate(sources, start=1):
-
-                            st.markdown(f"**Source {i}**")
-                            st.write(f"Ticker: {doc.metadata.get('ticker', 'N/A')}")
-                            st.write(f"File: {doc.metadata.get('filename', 'N/A')}")
-                            st.write(f"Page: {doc.metadata.get('page', 'N/A')}")
-                            st.text(doc.page_content[:1000])
-                            st.divider()
+                    display_sources(sources)
 
                 st.session_state.messages.append({
                     "role": "assistant",

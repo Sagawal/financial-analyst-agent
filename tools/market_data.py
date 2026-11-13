@@ -95,8 +95,9 @@ def get_historical_stock_data(
         if history.empty:
             return "No historical stock data available."
 
-        # Return the most recent 10 trading days
-        history = history.tail(10)
+        
+
+
 
         records = []
 
