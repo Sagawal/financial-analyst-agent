@@ -2,7 +2,7 @@
 
 An AI-powered financial research assistant that answers questions about company financial reports, performs financial calculations, compares companies, and retrieves recent financial market information using RAG and agentic workflows.
 
-**Live Demo:** [Financial Analyst Agent](https://financial-analyst-agent-fe6lrixvaxr35cywrpn5w.streamlit.app/)
+**Live Demo:** [Financial Analyst Agent](https://financial-analyst-agent-fe6lrixvatxr35cywrpn5w.streamlit.app/)
 
 ---
 
@@ -362,7 +362,7 @@ Open the local Streamlit URL displayed in your terminal.
 
 The application is deployed using Streamlit Community Cloud.
 
-**Live Application:** https://financial-analyst-agent-fe6lrixvaxr35cywrpn5w.streamlit.app/
+**Live Application:** https://financial-analyst-agent-fe6lrixvatxr35cywrpn5w.streamlit.app/
 
 Cloud deployments use Supabase for document storage and vector retrieval. Configure all required credentials through Streamlit Cloud Secrets rather than committing environment files.
 
