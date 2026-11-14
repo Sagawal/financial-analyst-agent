@@ -216,6 +216,12 @@ def generate_answer_node(state: AgentState):
             - Use only source IDs provided in the retrieved context.
             - Place citations next to the claims they support.
             - Never invent page numbers, filing dates, or sections.
+            - Format mathematical expressions using valid LaTeX.
+            - Use $...$ for inline mathematical expressions.
+            - Use $$...$$ for standalone equations.
+            - Never wrap mathematical expressions in ordinary square brackets.
+            - Format tables using standard Markdown tables.
+            - Use clear Markdown headings and bullet points.
 
             Additional verification feedback:
             {feedback}
@@ -835,10 +841,7 @@ workflow.add_node(
 
 workflow.add_node("company_analysis", company_analysis_node)
 
-workflow.add_node(
-    "comparison",
-    comparison_node
-)
+workflow.add_node("comparison",comparison_node)
 
 workflow.add_node("contextualize", contextualize_node)
 workflow.add_node("extract_entities", extract_entities_node)
@@ -873,6 +876,9 @@ workflow.add_conditional_edges(
     dispatch_comparison
 )
 
+# RAG retrieval workflow
+workflow.add_edge("retrieve", "grade")
+
 workflow.add_conditional_edges(
     "grade",
     check_relevance,
@@ -881,6 +887,8 @@ workflow.add_conditional_edges(
         "rewrite": "rewrite"
     }
 )
+
+workflow.add_edge("generate", "verify")
 
 workflow.add_conditional_edges(
     "verify",
@@ -894,17 +902,14 @@ workflow.add_conditional_edges(
 workflow.add_edge("company_analysis", "comparison")
 workflow.add_edge("comparison", END)
 
-# RAG retrieval workflow
-workflow.add_edge("retrieve", "grade")
+
 
 
 
 workflow.add_edge("rewrite", "retrieve")
 
 
-# Answer verification workflow
-# workflow.add_edge("generate", "verify")
-workflow.add_edge("generate", "verify")
+
 
 
 
